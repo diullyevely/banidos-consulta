@@ -1,0 +1,287 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    background: #000;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* ==========================================
+   ÁREA PRINCIPAL
+   ========================================== */
+
+.site {
+    position: relative;
+
+    width: 100%;
+    max-width: 1536px;
+
+    aspect-ratio: 1536 / 1024;
+
+    /*
+    ==========================================
+    IMAGEM DE FUNDO
+    ==========================================
+    */
+
+    background-image: url("./imagem/fundo.png");
+
+    background-size: 100% 100%;
+
+    background-repeat: no-repeat;
+
+    background-position: center;
+
+    overflow: hidden;
+}
+
+
+/* ==========================================
+   CAMPO PARA DIGITAR O ID
+   ========================================== */
+
+#playerId {
+    position: absolute;
+
+    left: 13.8%;
+    top: 49.1%;
+
+    width: 58.5%;
+    height: 9.2%;
+
+    background: transparent;
+
+    border: none;
+    outline: none;
+
+    color: #ffffff;
+
+    font-size: clamp(14px, 1.5vw, 25px);
+
+    padding-left: 5%;
+    padding-right: 4%;
+
+    z-index: 10;
+}
+
+
+#playerId::placeholder {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+
+/* ==========================================
+   BOTÃO CONSULTAR
+   ========================================== */
+
+#consultar {
+    position: absolute;
+
+    left: 70.6%;
+    top: 50.2%;
+
+    width: 14.7%;
+    height: 6.2%;
+
+    background: transparent;
+
+    border: none;
+    outline: none;
+
+    color: #ffffff;
+
+    font-size: clamp(13px, 1.3vw, 21px);
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    z-index: 20;
+}
+
+
+#consultar:hover {
+    background: transparent;
+}
+
+
+#consultar:active {
+    transform: scale(0.98);
+}
+
+
+/* ==========================================
+   RESULTADO
+   ========================================== */
+
+#resultado {
+    position: absolute;
+
+    left: 13.2%;
+    top: 64.5%;
+
+    width: 73.5%;
+    height: 18%;
+
+    display: flex;
+    align-items: center;
+
+    color: #ffffff;
+
+    opacity: 0;
+
+    transition: opacity 0.25s ease;
+
+    z-index: 10;
+}
+
+
+#resultado.mostrar {
+    opacity: 1;
+}
+
+
+/* ==========================================
+   STATUS
+   ========================================== */
+
+.status {
+    width: 28%;
+
+    padding-left: 2%;
+}
+
+
+.status-titulo {
+    font-size: clamp(16px, 1.6vw, 25px);
+
+    font-weight: bold;
+}
+
+
+.liberado {
+    color: #00e676;
+}
+
+
+.banido {
+    color: #ff006f;
+}
+
+
+/* ==========================================
+   ID
+   ========================================== */
+
+.campo-id {
+    width: 20%;
+
+    font-size: clamp(13px, 1.2vw, 19px);
+
+    word-break: break-all;
+}
+
+
+/* ==========================================
+   MOTIVO
+   ========================================== */
+
+.campo-motivo {
+    width: 28%;
+
+    font-size: clamp(13px, 1.2vw, 19px);
+}
+
+
+/* ==========================================
+   DATA
+   ========================================== */
+
+.campo-data {
+    width: 24%;
+
+    font-size: clamp(13px, 1.2vw, 19px);
+}
+
+
+/* ==========================================
+   TÍTULOS
+   ========================================== */
+
+.campo-id span,
+.campo-motivo span,
+.campo-data span {
+    display: block;
+
+    font-size: clamp(10px, 0.9vw, 14px);
+
+    color: rgba(255, 255, 255, 0.65);
+
+    margin-bottom: 7px;
+}
+
+
+/* ==========================================
+   MENSAGEM
+   ========================================== */
+
+.mensagem {
+    width: 100%;
+
+    text-align: center;
+
+    color: #ffffff;
+
+    font-size: clamp(14px, 1.4vw, 22px);
+
+    font-weight: bold;
+}
+
+
+/* ==========================================
+   RESPONSIVO
+   ========================================== */
+
+@media (max-width: 700px) {
+
+    #playerId {
+        font-size: 12px;
+    }
+
+    #consultar {
+        font-size: 9px;
+    }
+
+    #resultado {
+        top: 64%;
+        height: 19%;
+    }
+
+    .status-titulo,
+    .campo-id,
+    .campo-motivo,
+    .campo-data {
+        font-size: 9px;
+    }
+
+    .campo-id span,
+    .campo-motivo span,
+    .campo-data span {
+        font-size: 6px;
+        margin-bottom: 3px;
+    }
+}
