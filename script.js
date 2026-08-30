@@ -37,64 +37,88 @@ const banidos = {
     "16332805015": {
         motivo: "01",
         data: "23/08/2026"
+    },
+
+    "15940130916": {
+        motivo: "01",
+        data: "29/08/2026"
     }
 
 };
 
 
 /* =================================================
-   BANIMENTOS TEMPORÁRIOS DE 24 HORAS
+   SUSPENSÕES DE ATIVIDADES DO CANAL
 
-   1 até 5 bans de 24h = temporário
-   6 ou mais bans de 24h = permanente
+   - NÃO é banimento da live
+   - A pessoa continua podendo assistir a live
+   - A pessoa fica proibida somente da atividade indicada
+   - Máximo acumulado: 5 suspensões
 
-   EXEMPLO:
+   PADRÃO:
 
-   "123456789": {
-       bans24h: 1,
-       motivo: "01",
-       inicio: "27/08/2026 18:30"
+   "ID": {
+       suspensoes: 5,
+       inicio: "29/08/2026",
+       dias: 7,
+       proibido: "X1 E RANQUEADA"
    }
 
    ================================================= */
 
-
-const banimentos24h = {
+const suspensoesLive = {
 
     "1633230652": {
-        bans24h: 1,
-        motivo: "02",
-        inicio: "26/08/2026 17:00"
-    },
-    "9345819889": {
-        bans24h: 1,
-        motivo: "02",
-        inicio: "26/08/2026 17:00"
-    },
-    "12595358085": {
-        bans24h: 1,
-        motivo: "02",
-        inicio: "26/08/2026 17:00"
-    },
-        "15329093478": {
-        bans24h: 1,
-        motivo: "03",
-        inicio: "26/08/2026 17:00"
-    },
-        "15663458381": {
-        bans24h: 1,
-        motivo: "03",
-        inicio: "26/08/2026 17:00"
+        suspensoes: 1,
+        inicio: "26/08/2026",
+        dias: 1,
+        proibido: "ATIVIDADE"
     },
 
-        "123456789": {
-        bans24h: 1,
-        motivo: "03",
-        inicio: "27/08/2026 17:00"
+    "9345819889": {
+        suspensoes: 1,
+        inicio: "26/08/2026",
+        dias: 1,
+        proibido: "ATIVIDADE"
     },
+
+    "12595358085": {
+        suspensoes: 1,
+        inicio: "26/08/2026",
+        dias: 1,
+        proibido: "ATIVIDADE"
+    },
+
+    "15329093478": {
+        suspensoes: 1,
+        inicio: "26/08/2026",
+        dias: 1,
+        proibido: "ATIVIDADE"
+    },
+
+    "15663458381": {
+        suspensoes: 1,
+        inicio: "26/08/2026",
+        dias: 1,
+        proibido: "ATIVIDADE"
+    },
+
+    "123456789": {
+        suspensoes: 1,
+        inicio: "29/08/2026",
+        dias: 7,
+        proibido: "REI 2"
+    },
+
+    "15731865946": {
+        suspensoes: 1,
+        inicio: "25/08/2026",
+        dias: 7,
+        proibido: "JOGAR REI 2"
+    },
+
 
 };
-
 
 
 /* =================================================
@@ -118,23 +142,20 @@ campoId.addEventListener("input", function () {
 
 
 /* =================================================
-   CONVERTER DATA E HORA
-   FORMATO: DD/MM/AAAA HH:MM
+   CONVERTER DATA
+   FORMATO: DD/MM/AAAA
    ================================================= */
 
-function converterDataHora(dataHora) {
+function converterData(data) {
 
-    const partes = dataHora.split(" ");
-
-    const data = partes[0].split("/");
-    const hora = partes[1].split(":");
+    const partes = data.split("/");
 
     return new Date(
-        Number(data[2]),
-        Number(data[1]) - 1,
-        Number(data[0]),
-        Number(hora[0]),
-        Number(hora[1]),
+        Number(partes[2]),
+        Number(partes[1]) - 1,
+        Number(partes[0]),
+        0,
+        0,
         0
     );
 
@@ -142,40 +163,37 @@ function converterDataHora(dataHora) {
 
 
 /* =================================================
-   CALCULAR FIM DAS 24 HORAS
+   CALCULAR FIM DA SUSPENSÃO
    ================================================= */
 
-function calcularFim24Horas(inicio) {
+function calcularFimSuspensao(inicio, dias) {
 
-    const dataInicio = converterDataHora(inicio);
+    const dataInicio = converterData(inicio);
 
     return new Date(
-        dataInicio.getTime() + (24 * 60 * 60 * 1000)
+        dataInicio.getTime() + (dias * 24 * 60 * 60 * 1000)
     );
 
 }
 
 
 /* =================================================
-   FORMATAR DATA E HORA
+   FORMATAR DATA
    ================================================= */
 
-function formatarDataHora(data) {
+function formatarData(data) {
 
     const dia = String(data.getDate()).padStart(2, "0");
     const mes = String(data.getMonth() + 1).padStart(2, "0");
     const ano = data.getFullYear();
 
-    const hora = String(data.getHours()).padStart(2, "0");
-    const minuto = String(data.getMinutes()).padStart(2, "0");
-
-    return dia + "/" + mes + "/" + ano + " " + hora + ":" + minuto;
+    return dia + "/" + mes + "/" + ano;
 
 }
 
 
 /* =================================================
-   CONSULTAR BANIMENTO
+   CONSULTAR
    ================================================= */
 
 function consultarBanimento() {
@@ -260,17 +278,111 @@ function consultarBanimento() {
 
 
     /* =============================================
-       BANIMENTO TEMPORÁRIO
+       SUSPENSÃO DE ATIVIDADES
        ============================================= */
 
-    const temporario = banimentos24h[id];
+    const suspensao = suspensoesLive[id];
+
+    if (suspensao) {
+
+        const inicio = converterData(suspensao.inicio);
+
+        const fim = calcularFimSuspensao(
+            suspensao.inicio,
+            suspensao.dias
+        );
+
+        const agora = new Date();
 
 
-    /* =============================================
-       NÃO ESTÁ BANIDO
-       ============================================= */
+        /* =============================================
+           SUSPENSÃO ATIVA
+           ============================================= */
 
-    if (!temporario) {
+        if (agora < fim) {
+
+            resultado.innerHTML = `
+
+                <div class="status">
+
+                    <div class="status-titulo temporario">
+                        🟠 SUSPENSÃO DE ATIVIDADES
+                    </div>
+
+                </div>
+
+                <div class="campo-id">
+
+                    <span>
+                        ID DO JOGADOR
+                    </span>
+
+                    ${id}
+
+                </div>
+
+                <div class="campo-motivo">
+
+                    <span>
+                        PROIBIDO DE
+                    </span>
+
+                    ${suspensao.proibido}
+
+                </div>
+
+                <div class="campo-data">
+
+                    <span>
+                        SUSPENSÕES ACUMULADAS
+                    </span>
+
+                    ${suspensao.suspensoes}/5
+
+                </div>
+
+                <div class="campo-data">
+
+                    <span>
+                        INÍCIO DA SUSPENSÃO
+                    </span>
+
+                    ${suspensao.inicio}
+
+                </div>
+
+                <div class="campo-data">
+
+                    <span>
+                        DURAÇÃO
+                    </span>
+
+                    ${suspensao.dias}
+                    ${suspensao.dias == 1 ? "DIA" : "DIAS"}
+
+                </div>
+
+                <div class="campo-data">
+
+                    <span>
+                        SUSPENSO ATÉ
+                    </span>
+
+                    ${formatarData(fim)}
+
+                </div>
+
+            `;
+
+            resultado.classList.add("mostrar");
+
+            return;
+        }
+
+
+        /* =============================================
+           SUSPENSÃO ENCERRADA
+           ============================================= */
 
         resultado.innerHTML = `
 
@@ -298,17 +410,27 @@ function consultarBanimento() {
                     STATUS
                 </span>
 
-                Nenhum banimento
+                Suspensão de atividades encerrada
 
             </div>
 
             <div class="campo-data">
 
                 <span>
-                    BANS DE 24 HORAS
+                    SUSPENSÕES ACUMULADAS
                 </span>
 
-                0
+                ${suspensao.suspensoes}/5
+
+            </div>
+
+            <div class="campo-data">
+
+                <span>
+                    ÚLTIMA SUSPENSÃO
+                </span>
+
+                ${suspensao.inicio}
 
             </div>
 
@@ -321,153 +443,15 @@ function consultarBanimento() {
 
 
     /* =============================================
-       6 OU MAIS BANS DE 24H
-       = PERMANENTE
-       ============================================= */
-
-    if (temporario.bans24h >= 6) {
-
-        resultado.innerHTML = `
-
-            <div class="status">
-
-                <div class="status-titulo banido">
-                    🔴 BANIDO PERMANENTEMENTE
-                </div>
-
-            </div>
-
-            <div class="campo-id">
-
-                <span>
-                    ID DO JOGADOR
-                </span>
-
-                ${id}
-
-            </div>
-
-            <div class="campo-motivo">
-
-                <span>
-                    CÓDIGO DO BANIMENTO
-                </span>
-
-                ${temporario.motivo}
-
-            </div>
-
-            <div class="campo-data">
-
-                <span>
-                    BANS DE 24 HORAS
-                </span>
-
-                ${temporario.bans24h}
-
-            </div>
-
-            <div class="campo-data">
-
-                <span>
-                    DURAÇÃO
-                </span>
-
-                PERMANENTE
-
-            </div>
-
-        `;
-
-        resultado.classList.add("mostrar");
-
-        return;
-    }
-
-
-    /* =============================================
-       CALCULAR FIM DO BAN
-       ============================================= */
-
-    const inicio = converterDataHora(temporario.inicio);
-    const fim = calcularFim24Horas(temporario.inicio);
-    const agora = new Date();
-
-
-    /* =============================================
-       BAN JÁ TERMINOU
-       ============================================= */
-
-    if (agora >= fim) {
-
-        resultado.innerHTML = `
-
-            <div class="status">
-
-                <div class="status-titulo liberado">
-                    🟢 LIBERADO
-                </div>
-
-            </div>
-
-            <div class="campo-id">
-
-                <span>
-                    ID DO JOGADOR
-                </span>
-
-                ${id}
-
-            </div>
-
-            <div class="campo-motivo">
-
-                <span>
-                    STATUS
-                </span>
-
-                Ban de 24 horas encerrado
-
-            </div>
-
-            <div class="campo-data">
-
-                <span>
-                    BANS DE 24 HORAS
-                </span>
-
-                ${temporario.bans24h}
-
-            </div>
-
-            <div class="campo-data">
-
-                <span>
-                    ÚLTIMO BAN
-                </span>
-
-                ${formatarDataHora(inicio)}
-
-            </div>
-
-        `;
-
-        resultado.classList.add("mostrar");
-
-        return;
-    }
-
-
-    /* =============================================
-       BAN DE 24 HORAS ATIVO
+       LIBERADO
        ============================================= */
 
     resultado.innerHTML = `
 
         <div class="status">
 
-            <div class="status-titulo temporario">
-                🟠 BANIMENTO DE 24 HORAS
+            <div class="status-titulo liberado">
+                🟢 LIBERADO
             </div>
 
         </div>
@@ -485,40 +469,20 @@ function consultarBanimento() {
         <div class="campo-motivo">
 
             <span>
-                CÓDIGO DO BANIMENTO
+                STATUS
             </span>
 
-            ${temporario.motivo}
+            Nenhum banimento ou suspensão de atividades
 
         </div>
 
         <div class="campo-data">
 
             <span>
-                BANS DE 24 HORAS
+                SUSPENSÕES
             </span>
 
-            ${temporario.bans24h}
-
-        </div>
-
-        <div class="campo-data">
-
-            <span>
-                INÍCIO DO BAN
-            </span>
-
-            ${formatarDataHora(inicio)}
-
-        </div>
-
-        <div class="campo-data">
-
-            <span>
-                BANIDO ATÉ
-            </span>
-
-            ${formatarDataHora(fim)}
+            0/5
 
         </div>
 
