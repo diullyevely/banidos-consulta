@@ -42,7 +42,12 @@ const banidos = {
     "15940130916": {
         motivo: "01",
         data: "29/08/2026"
+    },
+        "11809558408": {
+        motivo: "01",
+        data: "01/09/2026"
     }
+
 
 };
 
@@ -116,8 +121,32 @@ const suspensoesLive = {
         dias: 7,
         proibido: "JOGAR REI 2"
     },
+    "179497640": {
+        suspensoes: 1,
+        inicio: "01/09/2026",
+        dias: 7,
+        proibido: "JOGAR REI 2"
+    },
 
+    "9464706022": {
+        suspensoes: 1,
+        inicio: "01/09/2026",
+        dias: 7,
+        proibido: "atividade"
+    },
 
+    "13555560709": {
+        suspensoes: 1,
+        inicio: "02/09/2026",
+        dias: 7,
+        proibido: "atividade"
+    },
+        "6962171837": {
+        suspensoes: 1,
+        inicio: "02/09/2026",
+        dias: 7,
+        proibido: "atividade"
+    },
 };
 
 
